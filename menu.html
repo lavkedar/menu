@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #menu {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200px;
+
+        background-color: white;
+        border: 1px solid black;
+        display: none;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      #example {
+        border: 10px red solid;
+      }
+
+      #button {
+        position: fixed;
+        top: 50px;
+        right: 20px;
+
+        padding: 5px 10px;
+        outline: 10px green;
+      }
+
+      ul {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      li {
+        list-style: none;
+        text-align: center;
+        border: black 2px solid;
+        padding: 10px 5px;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .disable {
+        border: 5px red solid;
+      }
+
+      .enable {
+        border: 5px green solid;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="button" class="disable" onclick="toggle(event)">
+      Disable Menu
+    </button>
+    <svg id="example" width="100vw" height="100vh"></svg>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
+    <div id="menu">
+      <ul>
+        <li>
+          <a href="#" id="create-node">Create Node </a>
+        </li>
+        <li><a href="#" id="delete-node">Delete Node</a></li>
+        <li><a href="#" id="update-node">Update Node</a></li>
+      </ul>
+    </div>
+    <script>
+      let menuDisabled = true;
+
+      let button = document.getElementById("button");
+
+      function toggle(e) {
+        menuDisabled = !menuDisabled;
+        console.log(menuDisabled);
+        e.stopPropagation();
+
+        if (menuDisabled) {
+          button.innerText = "Enable Menu";
+          button.classList.remove("disable");
+          button.classList.add("enable");
+        } else {
+          button.innerText = "Disable Menu";
+          button.classList.remove("enable");
+          button.classList.add("disable");
+        }
+
+        if (menuDisabled) {
+          menu.style.display = "none";
+        }
+      }
+      const menu = document.getElementById("menu");
+
+      const paper = Snap("#example");
+
+      document.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        if (event.target.tagName === "circle") {
+          menu.style.display = "none";
+
+          return;
+        }
+
+        if (menuDisabled) return;
+
+        menu.style.top = event.clientY + "px";
+        menu.style.left = event.clientX + "px";
+        menu.style.display = "block";
+      });
+
+      const createNode = document.getElementById("create-node");
+      const deleteNode = document.getElementById("delete-node");
+      const updateNode = document.getElementById("update-node");
+
+      createNode.addEventListener("click", function (event) {
+        event.stopPropagation();
+        console.log("Create Node clicked");
+        menu.style.display = "none";
+        let circle = paper.circle(event.offsetX, event.offsetY, 50);
+        circle.attr({ fill: "red" }).drag();
+      });
+
+      deleteNode.addEventListener("click", function (event) {
+        event.stopPropagation();
+        console.log("Delete Node clicked");
+        menu.style.display = "none";
+      });
+
+      updateNode.addEventListener("click", function (event) {
+        event.stopPropagation();
+        console.log("Update Node clicked");
+        menu.style.display = "none";
+      });
+    </script>
+  </body>
+</html>
